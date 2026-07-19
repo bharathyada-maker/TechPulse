@@ -1,0 +1,3 @@
+Kubernetes is an open-source container orchestration system.
+Use kubectl apply -f deployment.yaml to deploy containers.
+Key components: Pods, Services, Deployments, ConfigMaps.

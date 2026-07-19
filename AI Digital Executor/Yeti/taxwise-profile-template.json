@@ -1,0 +1,28 @@
+{
+  "income": {
+    "salary": 2400000,
+    "allowanceHRA": 360000,
+    "basicSalary": 1000000,
+    "rentPaid": 300000,
+    "isMetro": true,
+    "businessIncome": 120000,
+    "businessExpenses": 40000,
+    "capitalGainsShort": 35000,
+    "capitalGainsLong": 85000,
+    "otherInterest": 15000,
+    "otherDividend": 8000,
+    "cryptoIncome": 0,
+    "foreignIncome": 0
+  },
+  "deductions": {
+    "section80C": 150000,
+    "section80D_self": 25000,
+    "isSelfSenior": false,
+    "section80D_parents": 35000,
+    "areParentsSenior": true,
+    "section80CCD_1B": 50000,
+    "section80TTA": 10000,
+    "section24B_homeLoan": 120000,
+    "otherDeductions": 0
+  }
+}
