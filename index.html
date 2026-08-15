@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechPulse — Premium AI-Gamified Career Accelerator</title>
+  <meta name="description" content="Stay ahead of the next tech shift with interactive lessons, career mapping tools, and simulated AI tutoring designed to make career learning addictive.">
+  
+  <!-- Tabler Icons CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floating background glow blobs -->
+  <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+  <div class="glow-blob glow-blob-3" aria-hidden="true"></div>
+
+  <!-- Main App Shell -->
+  <div class="app-container">
+    
+    <!-- Custom HTML5 Canvas Particle / Confetti Overlay -->
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+    <!-- Slide-in Dopamine Notification Banner -->
+    <div id="notification-banner" class="notification-banner" role="status">
+      <div class="notification-content">
+        <i class="ti ti-star-half" aria-hidden="true"></i>
+        <span id="notification-msg">Welcome back! Pick a career path to get custom paths.</span>
+      </div>
+      <button class="notification-close" onclick="document.getElementById('notification-banner').classList.remove('show')" aria-label="Close Notification">
+        <i class="ti ti-x" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="nav-header">
+      <h1 class="nav-brand"><span>Tech</span>Pulse</h1>
+      <div class="nav-actions">
+        <!-- Sound Effect Toggle -->
+        <button class="theme-btn" id="sound-btn" onclick="toggleSound()" aria-label="Mute/Unmute Sound FX" title="Toggle Sound FX">
+          <i class="ti ti-volume" aria-hidden="true"></i>
+        </button>
+        <!-- Dark/Light Theme Toggle -->
+        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle Light/Dark Theme">
+          <i class="ti ti-sun" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Responsive Layout Wrapper -->
+    <div class="app-body-layout">
+      
+      <!-- 1. LEFT SIDEBAR (Desktop Dashboard Navigation & Badges) -->
+      <aside class="left-sidebar" aria-label="Dashboard Navigation">
+        <nav class="sidebar-nav">
+          <a href="#" id="sidebar-nav-home" class="sidebar-nav-item active" onclick="switchView('home')">
+            <i class="ti ti-home" aria-hidden="true"></i> Home
+          </a>
+          <a href="#" id="sidebar-nav-tutor" class="sidebar-nav-item" onclick="openAITutor('default')">
+            <i class="ti ti-messages" aria-hidden="true"></i> AI Tutor
+          </a>
+          <a href="#" id="sidebar-nav-saved" class="sidebar-nav-item" onclick="switchView('saved')">
+            <i class="ti ti-bookmark" aria-hidden="true"></i> Saved Lessons
+          </a>
+          <a href="#" id="sidebar-nav-analytics" class="sidebar-nav-item" onclick="switchView('analytics')">
+            <i class="ti ti-activity" aria-hidden="true"></i> Analytics
+          </a>
+          <a href="./AI Digital Executor/dist/index.html" class="sidebar-nav-item" target="_blank">
+            <i class="ti ti-terminal" aria-hidden="true"></i> Digital Executor
+          </a>
+          <a href="./AI Digital Executor/Yeti/dist/index.html" class="sidebar-nav-item" target="_blank">
+            <i class="ti ti-file-invoice" aria-hidden="true"></i> Yeti Taxwise
+          </a>
+        </nav>
+        
+        <div class="sidebar-achievements">
+          <h3 class="sidebar-achievements-title">
+            <i class="ti ti-trophy" aria-hidden="true"></i> Achievements
+          </h3>
+          <div class="badges-column" id="badges-container-desktop">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+
+        <!-- Career Market Value HUD (Jakob's Law gamification / Empty Space filler) -->
+        <div class="sidebar-market-value-card">
+          <h3 class="market-value-title">
+            <i class="ti ti-chart-line" aria-hidden="true"></i> Career Market Value
+          </h3>
+          <div class="market-value-amount">$<span id="market-value-val">80,000</span></div>
+          <div class="market-value-sub">Estimated Annual Salary (+<span id="market-value-pct">0</span>% change)</div>
+          
+          <!-- Skill Radar Chart Visualization -->
+          <div class="radar-chart-container">
+            <div class="skill-pill-header">Skill Vector Mapping</div>
+            <svg id="skill-radar-svg" viewBox="0 0 200 200">
+              <!-- Rendered dynamically via app.js (Background circles & axes lines) -->
+              <!-- Target profile vector overlay -->
+              <polygon id="radar-target-poly" points="" />
+              <!-- Current player profile vector -->
+              <polygon id="radar-current-poly" points="" />
+              
+              <!-- Monospace labels style -->
+              <text class="radar-label" x="100" y="18" text-anchor="middle">AI</text>
+              <text class="radar-label" x="182" y="78" text-anchor="start">CRE</text>
+              <text class="radar-label" x="150" y="174" text-anchor="start">COG</text>
+              <text class="radar-label" x="50" y="174" text-anchor="end">FRO</text>
+              <text class="radar-label" x="18" y="78" text-anchor="end">TEC</text>
+            </svg>
+          </div>
+
+          <div class="unlocked-skill-pills-container">
+            <div class="skill-pill-header">Active Skills Telemetry</div>
+            <div class="skill-pills-grid" id="unlocked-skills-pills">
+              <span class="skill-pill-tag">Streak Active</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 2. STATS HUD CARD (Top on Mobile, Top of Right Column on Desktop) -->
+      <section class="hud-card" aria-label="Stats Summary">
+        <div class="hud-stats-row">
+          <div class="streak-counter" title="Current Daily Streak">
+            <i class="ti ti-flame" aria-hidden="true"></i>
+            <span id="hud-streak">5</span> days
+          </div>
+          <div class="xp-goal-wrapper">
+            <div class="xp-ring-container">
+              <svg class="xp-ring-svg">
+                <defs>
+                  <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#818cf8" />
+                    <stop offset="100%" stop-color="#c084fc" />
+                  </linearGradient>
+                </defs>
+                <circle class="xp-ring-bg" cx="22" cy="22" r="18" />
+                <circle class="xp-ring-progress" cx="22" cy="22" r="18" />
+              </svg>
+              <div class="xp-value" id="hud-xp">40</div>
+            </div>
+            <div class="xp-text-label">
+              <span class="xp-title">Goal: <span id="hud-level-title">Lvl 1</span></span>
+              <span class="xp-subtitle">Claim <span id="hud-xp-goal">100</span> XP</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mobile-only Badges Row -->
+        <div class="badges-row" id="badges-container-mobile">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </section>
+
+      <!-- 3. CENTER CONTENT (Core Feed: Compass, Filters, Featured Card, Grid) -->
+      <main class="center-content">
+        
+        <!-- View: Home -->
+        <div id="view-home" class="view-pane active">
+          <!-- Career Compass Section -->
+          <section class="career-compass" aria-labelledby="compass-heading">
+            <div class="compass-header">
+              <h2 id="compass-heading" class="section-title">
+                <i class="ti ti-compass" aria-hidden="true"></i>
+                Career Compass
+              </h2>
+              <span class="compass-icon" aria-hidden="true">🎯</span>
+            </div>
+            <span class="compass-select-label">Choose your target path to customize recommendations:</span>
+            <div class="compass-options">
+              <button class="compass-btn" onclick="selectCareer('creative', this)">
+                <i class="ti ti-palette" aria-hidden="true"></i> Creative Creator
+              </button>
+              <button class="compass-btn" onclick="selectCareer('business', this)">
+                <i class="ti ti-chart-arrows" aria-hidden="true"></i> Business Leader
+              </button>
+              <button class="compass-btn" onclick="selectCareer('technical', this)">
+                <i class="ti ti-binary" aria-hidden="true"></i> AI Engineer
+              </button>
+              <button class="compass-btn" onclick="selectCareer('founder', this)">
+                <i class="ti ti-rocket" aria-hidden="true"></i> Startup Founder
+              </button>
+            </div>
+            <div class="compass-result" id="compass-result-box" aria-live="polite"></div>
+          </section>
+
+          <!-- Track Filter Scroll bar -->
+          <nav class="h-scroll-filters" aria-label="Learning tracks filters">
+            <div class="filter-chip active" data-track="all" onclick="setTrackFilter('all', this)">
+              <i class="ti ti-layout-grid" aria-hidden="true"></i> All Modules
+            </div>
+            <div class="filter-chip" data-track="ai" onclick="setTrackFilter('ai', this)">
+              <i class="ti ti-brain" aria-hidden="true"></i> AI &amp; Co-pilots
+            </div>
+            <div class="filter-chip" data-track="creator" onclick="setTrackFilter('creator', this)">
+              <i class="ti ti-users" aria-hidden="true"></i> Creator &amp; Solopreneur
+            </div>
+            <div class="filter-chip" data-track="cognitive" onclick="setTrackFilter('cognitive', this)">
+              <i class="ti ti-scale" aria-hidden="true"></i> Cognitive Tools
+            </div>
+            <div class="filter-chip" data-track="frontier" onclick="setTrackFilter('frontier', this)">
+              <i class="ti ti-atom" aria-hidden="true"></i> Frontier Tech
+            </div>
+            <div class="filter-chip" data-track="tech" onclick="setTrackFilter('tech', this)">
+              <i class="ti ti-code" aria-hidden="true"></i> Tech Essentials
+            </div>
+          </nav>
+
+          <!-- Featured Masterclass -->
+          <section class="featured-section" aria-labelledby="featured-heading">
+            <h2 id="featured-heading" class="sr-only">Featured Lesson</h2>
+            <div class="featured-card-wrapper">
+              <div class="featured-card" onclick="openModuleModal('ai-copilot')">
+                <div class="featured-banner">
+                  <div class="featured-banner-glow" aria-hidden="true"></div>
+                  <span class="featured-badge">
+                    <i class="ti ti-sparkles" aria-hidden="true"></i> Hot Topic · 2026 Edition
+                  </span>
+                  <h3 class="featured-card-title">AI Co-pilot Mastery: 10x Your Daily Output</h3>
+                  <p class="featured-card-desc">Master agentic delegation, sandbox execution, and memory pools to dominate in any modern career.</p>
+                </div>
+                <div class="featured-body">
+                  <div class="featured-chips">
+                    <span class="tag-sm tag-blue">Agentic Workflows</span>
+                    <span class="tag-sm tag-purple">Claude Code</span>
+                    <span class="tag-sm tag-teal">Context Tokens</span>
+                    <span class="tag-sm tag-amber">Solopreneurship</span>
+                  </div>
+                  <div class="featured-footer">
+                    <div class="meta-info">
+                      <span><i class="ti ti-clock" aria-hidden="true"></i> 5 min</span>
+                      <span><i class="ti ti-star" aria-hidden="true"></i> 4.9</span>
+                      <span><i class="ti ti-users" aria-hidden="true"></i> 28k learning</span>
+                    </div>
+                    <button class="action-btn">
+                      <i class="ti ti-player-play" aria-hidden="true"></i> Start
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Active AI Simulations & Sandboxes -->
+          <section class="modules-section">
+            <div class="section-header">
+              <h2 class="section-title">Active AI Simulations & Sandboxes</h2>
+            </div>
+            <div class="modules-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+              <!-- Digital Executor Card -->
+              <div class="module-card recommended-outline" onclick="window.open('./AI Digital Executor/dist/index.html', '_blank')" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 180px;">
+                <div class="module-icon-row">
+                  <span class="module-icon">🖥️</span>
+                  <span class="module-badge tag-blue" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Interactive Sandbox</span>
+                </div>
+                <div style="flex-grow: 1; margin-top: 10px;">
+                  <div class="module-title" style="font-size: 16px; font-weight: 700; color: var(--text-primary);">AI Digital Executor & OS Sandbox</div>
+                  <div class="module-desc" style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Interact with a simulated Antigravity OS. Try natural language command executions, clutter clean-ups, scam shields, and document analysis.</div>
+                </div>
+                <div class="module-footer" style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-card); padding-top: 10px; width: 100%;">
+                  <span style="color: #60a5fa; font-weight: 600;">Launch Sandbox →</span>
+                  <span style="font-size: 11px; color: var(--text-secondary);"><i class="ti ti-clock"></i> Live Simulator</span>
+                </div>
+              </div>
+
+              <!-- Yeti Taxwise Card -->
+              <div class="module-card recommended-outline" onclick="window.open('./AI Digital Executor/Yeti/dist/index.html', '_blank')" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 180px;">
+                <div class="module-icon-row">
+                  <span class="module-icon">📊</span>
+                  <span class="module-badge tag-purple" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">CA Client Portal</span>
+                </div>
+                <div style="flex-grow: 1; margin-top: 10px;">
+                  <div class="module-title" style="font-size: 16px; font-weight: 700; color: var(--text-primary);">Yeti Taxwise Compliance Portal</div>
+                  <div class="module-desc" style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Simulated chartered accountant platform. Optimize tax regimes, file income tax returns (ITR), automate bookkeeping, and manage client compliance.</div>
+                </div>
+                <div class="module-footer" style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-card); padding-top: 10px; width: 100%;">
+                  <span style="color: #c084fc; font-weight: 600;">Launch Portal →</span>
+                  <span style="font-size: 11px; color: var(--text-secondary);"><i class="ti ti-clock"></i> Live Simulator</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- All Modules Grid -->
+          <section class="modules-section" aria-labelledby="modules-heading">
+            <div class="section-header">
+              <h2 id="modules-heading" class="section-title">Career Readiness Modules</h2>
+              <span class="section-title"><span id="module-filtered-count">10 modules live</span></span>
+            </div>
+            <div class="modules-grid" id="modules-grid">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </section>
+        </div>
+
+        <!-- View: Saved Lessons -->
+        <div id="view-saved" class="view-pane" style="display: none;">
+          <section class="locked-dashboard-card">
+            <div class="locked-badge-overlay">
+              <i class="ti ti-lock" aria-hidden="true"></i>
+            </div>
+            <h2 class="locked-title">Saved Lessons Vault</h2>
+            <p class="locked-desc">Bookmark your favorite framework cheat sheets, risk checklists, and tutor explanations to review them later.</p>
+            <div class="lock-progress-bar">
+              <div class="lock-progress-fill" id="saved-lock-progress" style="width: 33%;"></div>
+            </div>
+            <div class="lock-progress-text">Requires <strong>Level 3</strong> (Current: <span class="current-level-val">Lvl 1</span>)</div>
+            <button class="btn-primary" onclick="switchView('home')">
+              <i class="ti ti-bolt" aria-hidden="true"></i> Complete Lessons to Level Up
+            </button>
+          </section>
+
+          <div class="blurred-preview-grid">
+            
+            <!-- Code Block Preview (React Hook) -->
+            <div class="preview-card-blurred">
+              <div class="preview-card-header">
+                <span class="preview-emoji">🎨</span>
+                <span class="preview-badge">React Code</span>
+              </div>
+              <div class="preview-title">React vs Vue: State Management</div>
+              <div class="preview-code-block">
+                <div class="preview-syntax"><span class="token keyword">const</span> [state, setState] = <span class="token function">useState</span>({</div>
+                <div class="preview-syntax">&nbsp;&nbsp;xp: <span class="token number">40</span>,</div>
+                <div class="preview-syntax">&nbsp;&nbsp;level: <span class="token number">1</span>,</div>
+                <div class="preview-syntax">&nbsp;&nbsp;track: <span class="token string">'AI Engineer'</span></div>
+                <div class="preview-syntax">});</div>
+              </div>
+            </div>
+            
+            <!-- Zero-Trust Flowchart Preview -->
+            <div class="preview-card-blurred">
+              <div class="preview-card-header">
+                <span class="preview-emoji">🛡️</span>
+                <span class="preview-badge">Network Map</span>
+              </div>
+              <div class="preview-title">Zero-Trust Network Checkpoints</div>
+              <div class="preview-svg-container">
+                <svg viewBox="0 0 300 80" class="preview-svg-diagram">
+                  <!-- Node 1 -->
+                  <rect x="10" y="20" width="70" height="40" rx="6" fill="rgba(255,255,255,0.05)" stroke="var(--border-card)" stroke-width="1" />
+                  <text x="45" y="44" text-anchor="middle" fill="var(--text-secondary)" font-size="10" font-family="monospace">Client</text>
+                  <!-- Arrow 1 -->
+                  <line x1="80" y1="40" x2="110" y2="40" stroke="var(--color-ai)" stroke-dasharray="2,2" stroke-width="1.5" />
+                  <!-- Node 2 (WAF Gate) -->
+                  <rect x="110" y="15" width="80" height="50" rx="6" fill="rgba(16, 185, 129, 0.05)" stroke="rgba(16, 185, 129, 0.25)" stroke-width="1" />
+                  <text x="150" y="38" text-anchor="middle" fill="#34d399" font-size="10" font-family="monospace">WAF</text>
+                  <text x="150" y="52" text-anchor="middle" fill="#34d399" font-size="8" font-family="monospace">(Auth Gate)</text>
+                  <!-- Arrow 2 -->
+                  <line x1="190" y1="40" x2="220" y2="40" stroke="var(--color-tech-text)" stroke-dasharray="2,2" stroke-width="1.5" />
+                  <!-- Node 3 -->
+                  <rect x="220" y="20" width="70" height="40" rx="6" fill="rgba(255,255,255,0.05)" stroke="var(--border-card)" stroke-width="1" />
+                  <text x="255" y="44" text-anchor="middle" fill="var(--text-secondary)" font-size="10" font-family="monospace">DB Node</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Database Comparison Table Preview -->
+            <div class="preview-card-blurred">
+              <div class="preview-card-header">
+                <span class="preview-emoji">🗄️</span>
+                <span class="preview-badge">Comparison</span>
+              </div>
+              <div class="preview-title">SQL (Postgres) vs NoSQL (MongoDB)</div>
+              <table class="preview-table-mock">
+                <thead>
+                  <tr>
+                    <th>Feature</th>
+                    <th>PostgreSQL</th>
+                    <th>MongoDB</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Schema</td>
+                    <td>Strict, Structured</td>
+                    <td>Dynamic, Documents</td>
+                  </tr>
+                  <tr>
+                    <td>Scaling</td>
+                    <td>Vertical Scale</td>
+                    <td>Horizontal Shards</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- View: Analytics -->
+        <div id="view-analytics" class="view-pane" style="display: none;">
+          <section class="locked-dashboard-card">
+            <div class="locked-badge-overlay">
+              <i class="ti ti-lock" aria-hidden="true"></i>
+            </div>
+            <h2 class="locked-title">Skill Analytics Hub</h2>
+            <p class="locked-desc">Track your learning velocity, review XP progression charts, and identify career path vulnerabilities.</p>
+            <div class="lock-progress-bar">
+              <div class="lock-progress-fill" id="analytics-lock-progress" style="width: 50%;"></div>
+            </div>
+            <div class="lock-progress-text">Requires <strong>Level 2</strong> (Current: <span class="current-level-val">Lvl 1</span>)</div>
+            <button class="btn-primary" onclick="switchView('home')">
+              <i class="ti ti-bolt" aria-hidden="true"></i> Earn XP to Unlock Hub
+            </button>
+          </section>
+
+          <div class="blurred-preview-grid">
+            
+            <!-- Neon Line Chart -->
+            <div class="preview-chart-container-blurred">
+              <div class="chart-header">XP Velocity &amp; Skill Progression</div>
+              <svg viewBox="0 0 320 120" class="preview-line-chart" style="width: 100%; height: auto;">
+                <!-- Grid Lines -->
+                <line x1="10" y1="20" x2="310" y2="20" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                <line x1="10" y1="50" x2="310" y2="50" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                <line x1="10" y1="80" x2="310" y2="80" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                <line x1="10" y1="110" x2="310" y2="110" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+                
+                <!-- Neon Graph Line 1 (AI) -->
+                <path d="M10,95 Q70,40 130,85 T250,30 T310,15" fill="none" stroke="var(--color-ai)" stroke-width="2.5" filter="drop-shadow(0 2px 6px rgba(99, 102, 241, 0.4))" />
+                <!-- Neon Graph Line 2 (Tech) -->
+                <path d="M10,105 Q70,90 130,55 T250,75 T310,40" fill="none" stroke="var(--color-tech-text)" stroke-width="2" filter="drop-shadow(0 2px 6px rgba(245, 158, 11, 0.4))" />
+                
+                <!-- Data Points -->
+                <circle cx="130" cy="85" r="4" fill="var(--color-ai)" />
+                <circle cx="250" cy="30" r="4" fill="var(--color-ai)" />
+                <circle cx="130" cy="55" r="4" fill="var(--color-tech-text)" />
+              </svg>
+            </div>
+
+            <!-- Career Goal Progress Board -->
+            <div class="preview-card-blurred" style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="preview-card-header">
+                <span class="preview-emoji">🎯</span>
+                <span class="preview-badge">Career Profiles</span>
+              </div>
+              <div class="preview-title" style="margin-bottom: 4px;">Role Compatibility Analysis</div>
+              
+              <!-- Profile 1 -->
+              <div class="mock-progress-row">
+                <div class="mock-progress-label">AI Engineer (Technical Path)</div>
+                <div class="lock-progress-bar" style="margin: 4px 0;"><div class="lock-progress-fill" style="width: 72%; background: var(--color-ai);"></div></div>
+                <div class="mock-progress-pct">72% alignment</div>
+              </div>
+              <!-- Profile 2 -->
+              <div class="mock-progress-row">
+                <div class="mock-progress-label">Digital Creator (Creative Path)</div>
+                <div class="lock-progress-bar" style="margin: 4px 0;"><div class="lock-progress-fill" style="width: 35%; background: var(--color-creator-text);"></div></div>
+                <div class="mock-progress-pct">35% alignment</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+
+      <!-- 4. RIGHT SIDEBAR (Daily AI Briefing, Daily Quiz) -->
+      <aside class="right-sidebar" aria-label="Activity Feed">
+        
+        <!-- Daily AI Briefing Briefs -->
+        <section class="briefing-section" aria-labelledby="briefing-heading">
+          <div class="briefing-box">
+            <div class="briefing-header">
+              <div class="briefing-header-left">
+                <span class="briefing-icon" aria-hidden="true">⚡</span>
+                <h2 id="briefing-heading" class="briefing-title">Today's AI Career Briefing</h2>
+              </div>
+              <button class="briefing-glow-tag" onclick="triggerBriefingScan()" style="border: none; cursor: pointer;">
+                <i class="ti ti-refresh" aria-hidden="true"></i> Scan Now
+              </button>
+            </div>
+            <div class="briefing-list">
+              <div class="briefing-item">
+                <div class="briefing-number">1</div>
+                <div class="briefing-body">
+                  <h3 class="briefing-item-title">Reasoning Models Are Table Stakes</h3>
+                  <p class="briefing-item-desc">Chain-of-thought execution (like OpenAI o3 and Claude 4) is now the default interface pattern.</p>
+                  <span class="briefing-item-tag tag-blue">AI Automation</span>
+                </div>
+              </div>
+              <div class="briefing-item">
+                <div class="briefing-number">2</div>
+                <div class="briefing-body">
+                  <h3 class="briefing-item-title">WebAssembly 3.0 Standardized</h3>
+                  <p class="briefing-item-desc">Native garbage collection and multi-threading land, turning browser tabs into desktop runtime platforms.</p>
+                  <span class="briefing-item-tag tag-purple">Web Systems</span>
+                </div>
+              </div>
+              <div class="briefing-item">
+                <div class="briefing-number">3</div>
+                <div class="briefing-body">
+                  <h3 class="briefing-item-title">Quantum Error Rates Drop Below Threshold</h3>
+                  <p class="briefing-item-desc">Scalable logical qubits are finally realized, pushing quantum optimization closer to commercial SaaS systems.</p>
+                  <span class="briefing-item-tag tag-teal">Frontier Tech</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Daily Knowledge Check Quiz -->
+        <section class="quiz-section" aria-labelledby="quiz-heading">
+          <div class="quiz-box">
+            <div class="quiz-header">
+              <div class="quiz-header-left">
+                <i class="ti ti-bulb" aria-hidden="true"></i>
+                <h2 id="quiz-heading" style="font-size: 13px; font-weight: 600;">Daily Knowledge Check</h2>
+              </div>
+              <span class="quiz-xp-badge">+60 XP</span>
+            </div>
+            <div class="quiz-body">
+              <div class="quiz-question">Which neural architecture forms the foundational backbone of modern models like GPT-4, Claude 3.5, and Gemini?</div>
+              <div class="quiz-hint-box">
+                <span class="hint-icon" aria-hidden="true">🧠</span>
+                <div>
+                  <strong>Career Hint:</strong> Introduced in the 2017 paper "Attention is all you need" — it replaced recurrent sequences entirely.
+                </div>
+              </div>
+              <div class="quiz-options">
+                <button class="quiz-option" onclick="submitQuizAnswer(this, false)">
+                  <span class="quiz-option-letter">A</span> Recurrent Neural Networks (RNN)
+                </button>
+                <button class="quiz-option" onclick="submitQuizAnswer(this, true)">
+                  <span class="quiz-option-letter">B</span> Transformer Architecture
+                </button>
+                <button class="quiz-option" onclick="submitQuizAnswer(this, false)">
+                  <span class="quiz-option-letter">C</span> Convolutional Networks (CNN)
+                </button>
+                <button class="quiz-option" onclick="submitQuizAnswer(this, false)">
+                  <span class="quiz-option-letter">D</span> Graph Neural Networks (GNN)
+                </button>
+              </div>
+            </div>
+        </section>
+
+        <!-- Live Telemetry System Log (Right Column empty space filler) -->
+        <section class="telemetry-section" aria-labelledby="telemetry-heading">
+          <div class="telemetry-box">
+            <div class="telemetry-header">
+              <div class="telemetry-header-left">
+                <span class="telemetry-icon" aria-hidden="true">🛰️</span>
+                <h2 id="telemetry-heading" class="telemetry-title">Live Career Shift Signals</h2>
+              </div>
+              <span class="telemetry-dot-active" title="System online"></span>
+            </div>
+            <div class="telemetry-terminal" id="telemetry-terminal-log">
+              <!-- Logs scroll here automatically -->
+            </div>
+            <div class="telemetry-terminal-actions">
+              <span class="telemetry-host">HOST: techpulse_node_01</span>
+              <button class="telemetry-btn-scan" onclick="runTelemetryDiagnostics()">
+                <i class="ti ti-terminal-2" aria-hidden="true"></i> Diagnostics
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </aside>
+
+    </div> <!-- End Responsive Layout Wrapper -->
+
+    <!-- Mobile-only Bottom Navigation Bar -->
+    <nav class="bottom-tab-bar" aria-label="Main Navigation Tabs">
+      <div id="tab-nav-home" class="tab-item active" onclick="switchView('home')">
+        <i class="ti ti-home" aria-hidden="true"></i>
+        <span>Home</span>
+      </div>
+      <div id="tab-nav-tutor" class="tab-item" onclick="openAITutor('default')">
+        <i class="ti ti-messages" aria-hidden="true"></i>
+        <span>AI Tutor</span>
+      </div>
+      <div id="tab-nav-saved" class="tab-item" onclick="switchView('saved')">
+        <i class="ti ti-bookmark" aria-hidden="true"></i>
+        <span>Saved</span>
+      </div>
+      <div id="tab-nav-analytics" class="tab-item" onclick="switchView('analytics')">
+        <i class="ti ti-activity" aria-hidden="true"></i>
+        <span>Progress</span>
+      </div>
+    </nav>
+
+    <!-- Sliding AI Tutor Widget Drawer -->
+    <aside id="ai-tutor-panel" class="ai-tutor-container" aria-labelledby="tutor-heading">
+      <div class="ai-tutor-header">
+        <div class="ai-tutor-identity">
+          <span class="ai-tutor-avatar" id="tutor-header-avatar" aria-hidden="true">🧠</span>
+          <div>
+            <h2 id="tutor-heading" class="ai-tutor-name">AI Tutor</h2>
+            <span class="ai-tutor-status">Mentor online</span>
+          </div>
+        </div>
+        <button class="ai-tutor-close" onclick="closeAITutor()" aria-label="Close AI Tutor">
+          <i class="ti ti-x" aria-hidden="true"></i>
+        </button>
+      </div>
+      
+      <!-- Mode and Persona selectors -->
+      <div class="persona-selector" style="flex-wrap: wrap; gap: 4px;">
+        <span class="persona-label">MODE:</span>
+        <select class="persona-select" id="tutor-mode-select" onchange="toggleTutorMode(this.value)" aria-label="Select Tutor Mode">
+          <option value="chat">Conversational Chat</option>
+          <option value="roleplay">Roleplay Challenge</option>
+        </select>
+        
+        <span class="persona-label" id="tutor-persona-label" style="margin-left: auto;">PERSONA:</span>
+        <select class="persona-select" id="tutor-persona-select" onchange="updateTutorIdentity()" aria-label="Select AI Tutor Persona">
+          <option value="analogy">Analogy Master (EL5)</option>
+          <option value="nocode">No-Code Hacker</option>
+          <option value="tech">Technical Deep Dive</option>
+        </select>
+
+        <span class="persona-label" id="tutor-roleplay-label" style="display: none; margin-left: auto;">SCENARIO:</span>
+        <select class="persona-select" id="tutor-roleplay-select" style="display: none;" onchange="selectRoleplayScenario(this.value)" aria-label="Select Roleplay Scenario">
+          <option value="pitch">Pitch a Client (Solopreneur)</option>
+          <option value="interview">Mock Job Interview (AI Engineer)</option>
+          <option value="critique">Prompt Critique (Creator)</option>
+        </select>
+        
+        <div style="width: 100%; height: 1px; background: var(--border-card); margin: 4px 0;"></div>
+
+        <span class="persona-label">TOPIC CONTEXT:</span>
+        <select class="persona-select" id="tutor-topic-select" aria-label="Select Learning Topic">
+          <option value="default">General Career Advice</option>
+          <optgroup label="AI &amp; Co-pilots">
+            <option value="AI Co-pilot Mastery">AI Co-pilot Mastery</option>
+            <option value="Prompt Engineering for Strategy">Prompt Engineering for Strategy</option>
+          </optgroup>
+          <optgroup label="Creator &amp; Solopreneur">
+            <option value="Building in Public">Building in Public</option>
+            <option value="The Solopreneur Stack">The Solopreneur Stack</option>
+          </optgroup>
+          <optgroup label="Cognitive Tools">
+            <option value="Systems Thinking">Systems Thinking</option>
+            <option value="Data Literacy">Data Literacy</option>
+          </optgroup>
+          <optgroup label="Frontier Tech">
+            <option value="Quantum Computing Decoded">Quantum Computing Decoded</option>
+            <option value="CRISPR &amp; Biotech Revolution">CRISPR &amp; Biotech Revolution</option>
+          </optgroup>
+          <optgroup label="Tech Essentials">
+            <option value="Zero-Trust Security">Zero-Trust Security</option>
+            <option value="WebAssembly 3.0 in Practice">WebAssembly 3.0 in Practice</option>
+            <option value="Frontend Frameworks">Frontend Frameworks</option>
+            <option value="Backend Frameworks">Backend Frameworks</option>
+            <option value="Database Systems">Database Systems</option>
+            <option value="Risk Frameworks">Risk Frameworks</option>
+            <option value="Security Firewalls">Security Firewalls</option>
+            <option value="Python Automation Decoded">Python Automation</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <!-- Chat area -->
+      <div class="ai-tutor-chat" id="tutor-chat-area">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Chat input -->
+      <div class="ai-tutor-input-area">
+        <input type="text" class="ai-tutor-input" id="ai-tutor-chat-input" placeholder="Type here..." onkeydown="if(event.key === 'Enter') handleTutorInput()">
+        <button class="ai-tutor-send" onclick="handleTutorInput()" aria-label="Send Message">
+          <i class="ti ti-send" aria-hidden="true"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Modal (Double-sided interactive flashcard and takeaways) -->
+    <div id="module-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-m-title">
+      <div class="modal-container">
+        <header class="modal-header">
+          <h2 id="modal-m-title" class="modal-title">AI Co-pilot Mastery</h2>
+          <button class="modal-close" onclick="closeModuleModal()" aria-label="Close details">
+            <i class="ti ti-x" aria-hidden="true"></i>
+          </button>
+        </header>
+        
+        <div class="modal-body">
+          <!-- 3D Flashcard flip container -->
+          <div class="flashcard-wrapper" id="modal-flashcard" onclick="flipCard(this)">
+            <div class="flashcard-inner">
+              <div class="flashcard-face flashcard-front">
+                <span class="flashcard-icon" id="modal-card-icon">🤖</span>
+                <div class="flashcard-desc" id="modal-card-front-desc">Click to reveal core concept</div>
+                <span class="flashcard-tip"><i class="ti ti-rotate"></i> Flip Card</span>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <div class="flashcard-desc" id="modal-card-back-desc">This is the back description of the card.</div>
+                <span class="flashcard-tip"><i class="ti ti-rotate"></i> Flip Card</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Myth vs Reality Box -->
+          <div class="myth-reality-box" id="modal-myth-reality">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Career Leverage Formula Box -->
+          <div class="leverage-box" id="modal-leverage">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Visual Delivery Track (takeaways) -->
+          <div class="takeaways-title">Concept Journey Map (Complete checkpoints to unlock claim)</div>
+          <div class="takeaways-path-container">
+            <svg id="takeaway-path-svg" viewBox="0 0 300 80">
+              <defs>
+                <linearGradient id="active-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#818cf8" />
+                  <stop offset="100%" stop-color="#10b981" />
+                </linearGradient>
+              </defs>
+              <!-- Base dotted path -->
+              <path class="base-path" d="M 30 40 L 270 40" />
+              <!-- Active glowing progress path -->
+              <path id="takeaway-progress-path" d="M 30 40 L 270 40" />
+              
+              <!-- Checkpoint Nodes & Texts dynamically rendered -->
+              <g id="takeaway-svg-nodes"></g>
+            </svg>
+            
+            <!-- Learner Shuttle Avatar -->
+            <div id="takeaway-avatar-shuttle">🚀</div>
+          </div>
+
+          <!-- Takeaway Detail Panel -->
+          <div class="takeaway-detail-panel" id="modal-takeaway-detail">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Micro challenge interactive card -->
+          <div class="modal-challenge-box" id="modal-challenge">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Modal actions -->
+          <div class="modal-actions">
+            <button class="btn-primary locked" id="modal-cta" onclick="claimXP()">
+              <i class="ti ti-lock" aria-hidden="true"></i> Read Action Checklist to Claim XP
+            </button>
+            <button class="btn-secondary" onclick="closeModuleModal(); openAITutor(document.getElementById('modal-m-title').textContent)">
+              <i class="ti ti-messages" aria-hidden="true"></i> Ask AI Tutor about this topic
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-Screen Level Up Celebration Overlay -->
+    <div id="level-up-overlay" class="level-up-overlay" role="dialog" aria-modal="true" aria-labelledby="lvl-up-title" style="display: none;">
+      <div class="level-up-card">
+        <div class="level-up-glow" aria-hidden="true"></div>
+        <div class="level-up-emoji" aria-hidden="true">🏆</div>
+        <h2 class="level-up-title" id="lvl-up-title">CAREER LEVEL UP!</h2>
+        <p class="level-up-text">You reached <strong style="color: #818cf8;">Level <span id="new-level-num">2</span></strong>!</p>
+        <span class="level-up-subtitle">Your career market value increases.</span>
+        
+        <div class="level-up-badge-unlocked">
+          <div class="badge-icon" id="unlocked-badge-emoji">🔥</div>
+          <div>
+            <div style="font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">New Badge Unlocked</div>
+            <div class="badge-name" id="unlocked-badge-name">AI Apprentice</div>
+          </div>
+        </div>
+        
+        <button class="level-up-btn" onclick="closeLevelUpCelebration()">
+          <i class="ti ti-bolt" aria-hidden="true"></i> Claim Rewards &amp; Continue
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Core Logic Script -->
+  <script src="app.js"></script>
+</body>
+</html>
