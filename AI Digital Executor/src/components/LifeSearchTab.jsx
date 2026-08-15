@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, FileText, Sparkles, AlertCircle } from 'lucide-react';
+import { sendRequest } from '../api';
 
 export default function LifeSearchTab() {
   const [query, setQuery] = useState('');
@@ -14,8 +15,7 @@ export default function LifeSearchTab() {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/search?query=${encodeURIComponent(query)}`);
-      const data = await response.json();
+      const data = await sendRequest(`/api/search?query=${encodeURIComponent(query)}`);
       if (data.success) {
         setResults(data.results);
         setSearched(true);

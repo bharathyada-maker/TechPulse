@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, ShieldAlert, Sparkles, Filter, RefreshCw, Layers, HardDrive, CheckSquare, Square } from 'lucide-react';
+import { sendRequest } from '../api';
 
 export default function ClutterTab({ onRefreshFileSystem }) {
   const [duplicates, setDuplicates] = useState([]);
@@ -12,8 +13,7 @@ export default function ClutterTab({ onRefreshFileSystem }) {
   const scanClutter = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/clutter/scan');
-      const data = await response.json();
+      const data = await sendRequest('/api/clutter/scan');
       if (data.success) {
         setDuplicates(data.duplicates);
         setTempFiles(data.tempFiles);
@@ -51,12 +51,7 @@ export default function ClutterTab({ onRefreshFileSystem }) {
     if (selectedFiles.length === 0) return;
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/clutter/clean', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ files: selectedFiles })
-      });
-      const data = await response.json();
+      const data = await sendRequest('/api/clutter/clean', 'POST', { files: selectedFiles });
       if (data.success) {
         // Refresh scan and filesystem
         await scanClutter();

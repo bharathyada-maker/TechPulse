@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Terminal, HelpCircle, CheckCircle2, AlertTriangle, Info, ShieldCheck, Sparkles, Loader } from 'lucide-react';
+import { sendRequest } from '../api';
 
 export default function ExecutorTab({ onRefreshFileSystem }) {
   const [command, setCommand] = useState('');
@@ -51,12 +52,7 @@ export default function ExecutorTab({ onRefreshFileSystem }) {
     ]);
 
     try {
-      const response = await fetch('http://localhost:3001/api/execute', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ command: cmdText })
-      });
-      const data = await response.json();
+      const data = await sendRequest('/api/execute', 'POST', { command: cmdText });
 
       if (data.success && data.logs) {
         // Stream the logs one by one for visual effect

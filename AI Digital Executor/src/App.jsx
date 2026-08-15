@@ -16,6 +16,8 @@ import ScamShieldTab from './components/ScamShieldTab';
 import LifeSearchTab from './components/LifeSearchTab';
 import BureaucracyTab from './components/BureaucracyTab';
 
+import { sendRequest } from './api';
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('executor');
   const [files, setFiles] = useState([]);
@@ -29,8 +31,7 @@ export default function App() {
     else setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/sandbox/status');
-      const data = await response.json();
+      const data = await sendRequest('/api/sandbox/status');
       if (data.success) {
         setFiles(data.files);
         setTotalSize(data.totalSize);
@@ -47,10 +48,7 @@ export default function App() {
   const handleResetSandbox = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/sandbox/reset', {
-        method: 'POST'
-      });
-      const data = await response.json();
+      const data = await sendRequest('/api/sandbox/reset', 'POST');
       if (data.success) {
         await fetchFilesystemStatus();
       }

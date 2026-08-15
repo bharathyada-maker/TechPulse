@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FileCheck2, Calendar, ClipboardCheck, Sparkles, AlertCircle, FileText, ChevronRight } from 'lucide-react';
+import { sendRequest } from '../api';
 
 export default function BureaucracyTab() {
   const [selectedFile, setSelectedFile] = useState('');
@@ -18,12 +19,7 @@ export default function BureaucracyTab() {
     setSelectedFile(relPath);
 
     try {
-      const response = await fetch('http://localhost:3001/api/bureaucracy/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename: relPath })
-      });
-      const data = await response.json();
+      const data = await sendRequest('/api/bureaucracy/analyze', 'POST', { filename: relPath });
       if (data.success) {
         setResult(data);
       }

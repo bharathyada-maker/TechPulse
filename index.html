@@ -68,6 +68,12 @@
           <a href="#" id="sidebar-nav-analytics" class="sidebar-nav-item" onclick="switchView('analytics')">
             <i class="ti ti-activity" aria-hidden="true"></i> Analytics
           </a>
+          <a href="./AI Digital Executor/dist/index.html" class="sidebar-nav-item" target="_blank">
+            <i class="ti ti-terminal" aria-hidden="true"></i> Digital Executor
+          </a>
+          <a href="./AI Digital Executor/Yeti/dist/index.html" class="sidebar-nav-item" target="_blank">
+            <i class="ti ti-file-invoice" aria-hidden="true"></i> Yeti Taxwise
+          </a>
         </nav>
         
         <div class="sidebar-achievements">
@@ -233,6 +239,46 @@
                       <i class="ti ti-player-play" aria-hidden="true"></i> Start
                     </button>
                   </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Active AI Simulations & Sandboxes -->
+          <section class="modules-section">
+            <div class="section-header">
+              <h2 class="section-title">Active AI Simulations & Sandboxes</h2>
+            </div>
+            <div class="modules-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+              <!-- Digital Executor Card -->
+              <div class="module-card recommended-outline" onclick="window.open('./AI Digital Executor/dist/index.html', '_blank')" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 180px;">
+                <div class="module-icon-row">
+                  <span class="module-icon">🖥️</span>
+                  <span class="module-badge tag-blue" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Interactive Sandbox</span>
+                </div>
+                <div style="flex-grow: 1; margin-top: 10px;">
+                  <div class="module-title" style="font-size: 16px; font-weight: 700; color: var(--text-primary);">AI Digital Executor & OS Sandbox</div>
+                  <div class="module-desc" style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Interact with a simulated Antigravity OS. Try natural language command executions, clutter clean-ups, scam shields, and document analysis.</div>
+                </div>
+                <div class="module-footer" style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-card); padding-top: 10px; width: 100%;">
+                  <span style="color: #60a5fa; font-weight: 600;">Launch Sandbox →</span>
+                  <span style="font-size: 11px; color: var(--text-secondary);"><i class="ti ti-clock"></i> Live Simulator</span>
+                </div>
+              </div>
+
+              <!-- Yeti Taxwise Card -->
+              <div class="module-card recommended-outline" onclick="window.open('./AI Digital Executor/Yeti/dist/index.html', '_blank')" style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; min-height: 180px;">
+                <div class="module-icon-row">
+                  <span class="module-icon">📊</span>
+                  <span class="module-badge tag-purple" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">CA Client Portal</span>
+                </div>
+                <div style="flex-grow: 1; margin-top: 10px;">
+                  <div class="module-title" style="font-size: 16px; font-weight: 700; color: var(--text-primary);">Yeti Taxwise Compliance Portal</div>
+                  <div class="module-desc" style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Simulated chartered accountant platform. Optimize tax regimes, file income tax returns (ITR), automate bookkeeping, and manage client compliance.</div>
+                </div>
+                <div class="module-footer" style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-card); padding-top: 10px; width: 100%;">
+                  <span style="color: #c084fc; font-weight: 600;">Launch Portal →</span>
+                  <span style="font-size: 11px; color: var(--text-secondary);"><i class="ti ti-clock"></i> Live Simulator</span>
                 </div>
               </div>
             </div>

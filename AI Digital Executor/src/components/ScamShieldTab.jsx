@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldAlert, ShieldCheck, AlertTriangle, Sparkles, RefreshCw, Send, CheckCircle2 } from 'lucide-react';
+import { sendRequest } from '../api';
 
 export default function ScamShieldTab() {
   const [content, setContent] = useState('');
@@ -30,12 +31,7 @@ export default function ScamShieldTab() {
     setResult(null);
 
     try {
-      const response = await fetch('http://localhost:3001/api/scam/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: text })
-      });
-      const data = await response.json();
+      const data = await sendRequest('/api/scam/analyze', 'POST', { content: text });
       if (data.success) {
         setResult(data);
       }
