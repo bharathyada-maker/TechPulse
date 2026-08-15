@@ -1812,9 +1812,12 @@ window.triggerBriefingScan = function() {
   `;
   
   const briefingBox = document.querySelector('.briefing-box');
-  briefingBox.appendChild(scanline);
+  if (briefingBox) briefingBox.appendChild(scanline);
   
   showNotification('📡 AI Tutor updating briefing feeds with latest industry updates...');
+  
+  // Trigger dynamic refresh from API
+  updateAICareerBriefing();
   
   setTimeout(() => {
     scanline.remove();
@@ -2651,9 +2654,61 @@ window.triggerTelemetryTrendTick = function() {
   }
 };
 
+async function updateAICareerBriefing() {
+  const briefingContainer = document.getElementById('briefing-list');
+  if (!briefingContainer) return;
+
+  try {
+    // Fetch latest AI articles from Dev.to API (supports CORS)
+    const res = await fetch('https://dev.to/api/articles?tag=ai&per_page=3');
+    if (!res.ok) throw new Error('Network response not ok');
+    const articles = await res.json();
+    
+    if (articles && articles.length >= 3) {
+      let html = '';
+      articles.slice(0, 3).forEach((art, index) => {
+        const title = art.title || 'AI Industry Update';
+        const description = art.description || 'Latest industry developments and learning vectors.';
+        const tags = art.tag_list || ['AI'];
+        const tagText = tags[0] ? tags[0].toUpperCase() : 'AI';
+        const tagClass = index % 3 === 0 ? 'tag-blue' : index % 3 === 1 ? 'tag-purple' : 'tag-teal';
+
+        html += `
+          <div class="briefing-item">
+            <div class="briefing-number">${index + 1}</div>
+            <div class="briefing-body">
+              <h3 class="briefing-item-title"><a href="${art.url}" target="_blank" style="color: inherit; text-decoration: none; border-bottom: 1px dotted var(--text-secondary); transition: all 0.2s;" onmouseover="this.style.color='var(--color-ai-text)';" onmouseout="this.style.color='inherit';">${title}</a></h3>
+              <p class="briefing-item-desc">${description}</p>
+              <span class="briefing-item-tag ${tagClass}">${tagText}</span>
+            </div>
+          </div>
+        `;
+        
+        // Also inject this feed article dynamically into the live telemetry feed queue for rotation!
+        const matchModules = ['ai-copilot', 'prompt-eng', 'wasm-web', 'database-systems', 'frontend-frameworks'];
+        const randomModule = matchModules[Math.floor(Math.random() * matchModules.length)];
+        TELEMETRY_SIGNALS.push({
+          message: `📰 [LIVE FEED] ${title}`,
+          moduleId: randomModule,
+          trendPoint: `**Dev.to AI Feed (2026 Live Signals)**: ${description}`
+        });
+      });
+      briefingContainer.innerHTML = html;
+      setTimeout(() => addTelemetryLog("📰 Dynamic AI Briefing feed synchronized successfully from Dev.to.", "system"), 1500);
+    }
+  } catch (err) {
+    console.warn('Could not load dynamic AI news feed, using offline defaults.', err);
+    setTimeout(() => addTelemetryLog("⚠️ Live briefing sync offline. Displaying cached standard metrics.", "system"), 1500);
+  }
+}
+
 function initTelemetryFeed() {
   setTimeout(() => addTelemetryLog("🛰️ System initialized. Connecting network channels...", "system"), 200);
   setTimeout(() => addTelemetryLog("📡 Linked to live global tech job market telemetry feed.", "system"), 1000);
+  
+  // Load dynamic briefings on init
+  updateAICareerBriefing();
+  
   setTimeout(() => triggerTelemetryTrendTick(), 2500);
   
   setInterval(() => {
