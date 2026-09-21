@@ -215,6 +215,15 @@ const BITES = [
       ],
       answer: 1
     },
+    version2026: {
+      version: 'Agentic AI 2026',
+      status: 'Adopt',
+      headline: 'LangGraph Multi-Agent Swarms & MCP Integration',
+      legacy: 'Single prompt-response chatbots, manual copy-pasting of generated code.',
+      modern: 'Multi-agent coding swarms: orchestrator, coder, test runner, reviewer communicating over Model Context Protocol (MCP).',
+      codeSnippet: '// MCP Multi-Agent Flow 2026\nconst swarm = new AgentSwarm({\n  agents: [coder, reviewer, tester],\n  protocol: "MCP-2026",\n  autoIterate: true\n});\nawait swarm.resolveIssue("#142");',
+      output: '>>> Issue resolved: 3 files changed, 14 unit tests passing\n>>> Time: 12 seconds'
+    },
     modal: {
       title: 'AI Co-pilot Mastery',
       desc: 'Top professionals do not compete with AI — they orchestrate it. Master code/document generation, file translation, and research loops.',
@@ -519,6 +528,15 @@ const BITES = [
       ],
       answer: 1
     },
+    version2026: {
+      version: 'Zero-Trust 2026 Architecture',
+      status: 'Adopt',
+      headline: 'Passkeys, WebAuthn & Ephemeral Cryptographic Proofs',
+      legacy: 'Static passwords, SMS 2FA, long-lived JWT tokens (vulnerable to session theft).',
+      modern: 'Passkeys with biometric hardware keys, continuous posture checking every 30s, ephemeral short-lived tokens.',
+      codeSnippet: '// WebAuthn 2026 Passkey Assertion\nconst credential = await navigator.credentials.get({\n  publicKey: { challenge: new Uint8Array(32), userVerification: "required" }\n});',
+      output: '>>> Passkey verified with Secure Enclave\n>>> Session token TTL: 30 seconds'
+    },
     modal: {
       title: 'Zero-Trust Security',
       desc: 'Traditional firewalls are obsolete. Zero-Trust requires continuous validation of every user and device.',
@@ -557,6 +575,15 @@ const BITES = [
       ],
       answer: 1
     },
+    version2026: {
+      version: 'WebAssembly 3.0',
+      status: 'Trial',
+      headline: 'Wasm Garbage Collection & Component Model',
+      legacy: 'Wasm 1.0: Only C/Rust, linear memory only, no GC, manual JS wrappers.',
+      modern: 'Wasm 3.0: Native GC allows Kotlin/Dart/Java, Component Model enables multi-language linking.',
+      codeSnippet: ';; WebAssembly 3.0 GC struct\n(module\n  (type $Point (struct (field (mut i32)) (field (mut i32))))\n  (func (export "makePoint") (result (ref $Point))\n    (struct.new $Point (i32.const 10) (i32.const 20))\n  )\n)',
+      output: '>>> Wasm 3.0 GC module instantiated in 0.2ms\n>>> Zero memory leaks'
+    },
     modal: {
       title: 'WebAssembly 3.0 in Practice',
       desc: 'Wasm enables desktop-grade performance on the web by running compiled C++, Rust, or Go in a secure sandbox.',
@@ -594,6 +621,15 @@ const BITES = [
         "jQuery"
       ],
       answer: 1
+    },
+    version2026: {
+      version: 'React 19.1 & Next.js 16',
+      status: 'Adopt',
+      headline: 'Server Actions & Streaming React Server Components',
+      legacy: 'React 17/18: Client-side useEffect data fetching, separate API routes, hydration waterfalls.',
+      modern: 'React 19: Server Actions, useActionState, useOptimistic, zero client JS bundle for server components.',
+      codeSnippet: '// React 19 Server Action\nasync function updateProfile(prevState, formData) {\n  "use server";\n  const name = formData.get("name");\n  await db.users.update({ name });\n  return { success: true, updated: name };\n}',
+      output: '>>> [Server Action] Executed on Edge in 1.8ms\n>>> Hydration overhead: 0 KB'
     },
     modal: {
       title: 'Frontend Frameworks Decoded',
@@ -673,6 +709,15 @@ const BITES = [
       ],
       answer: 1
     },
+    version2026: {
+      version: 'PostgreSQL 17.2 & Vector HNSW',
+      status: 'Adopt',
+      headline: 'JSON_TABLE & High-Dimensional Vector Search',
+      legacy: 'Postgres 13: Slow JSON parsing, separate vector engines needed.',
+      modern: 'Postgres 17: Native SQL:2023 JSON_TABLE, memory-optimized vacuuming, pgvector 0.8+ with halfvec.',
+      codeSnippet: '-- Postgres 17 JSON_TABLE & Vector\nSELECT jt.* FROM logs,\nJSON_TABLE(data, "$.items[*]" COLUMNS(\n  id INT PATH "$.id",\n  name TEXT PATH "$.name"\n)) AS jt\nORDER BY embedding <=> "[0.1, 0.9, 0.4]" LIMIT 5;',
+      output: '>>> 5 rows returned in 1.1ms\n>>> HNSW Index hit ratio: 99.4%'
+    },
     modal: {
       title: 'Database Systems Decoded',
       desc: 'Databases store application state securely and handle concurrent reading and writing of data.',
@@ -751,6 +796,15 @@ const BITES = [
       ],
       answer: 1
     },
+    version2026: {
+      version: 'Next-Gen AI WAF 2026',
+      status: 'Adopt',
+      headline: 'Behavioral AI Heuristics & Bot Swarm Defense',
+      legacy: 'Regex rule lists (easily bypassed by slight syntax variations).',
+      modern: 'LLM-driven payload analysis, automated zero-day virtual patching, behavioral bot fingerprinting.',
+      codeSnippet: '// Edge WAF Rule 2026\nexport default {\n  async fetch(request) {\n    const score = await aiWAF.inspect(request);\n    if (score.threat > 0.85) return new Response("Blocked", { status: 403 });\n    return fetch(request);\n  }\n};',
+      output: '>>> AI Threat Score: 0.94 (SQLi detected in JSON)\n>>> Request blocked at edge in 0.4ms'
+    },
     modal: {
       title: 'Security Firewalls Decoded',
       desc: 'Firewalls sit between networks to inspect incoming and outgoing traffic and block malicious behavior.',
@@ -789,6 +843,15 @@ const BITES = [
         "foreach item:"
       ],
       answer: 0
+    },
+    version2026: {
+      version: 'Python 3.14 (Latest 2026)',
+      status: 'Adopt',
+      headline: 'CPython JIT Compiler & Free-Threaded GIL',
+      legacy: 'Python 3.10: Single-core GIL lock, interpreted bytecode without native JIT compiler.',
+      modern: 'Python 3.14: JIT compiler tier accelerates loops by 25%; free-threaded build runs true parallel threads on all CPU cores.',
+      codeSnippet: '# Python 3.14 JIT & Parallel Automation\nimport asyncio, pathlib\n\nasync def clean_logs():\n    log_dir = pathlib.Path("./logs")\n    async with asyncio.TaskGroup() as tg:\n        for log in log_dir.glob("*.log"):\n            tg.create_task(asyncio.to_thread(log.unlink))\n    return "Cleaned parallel logs in 4ms!"\n\nprint(asyncio.run(clean_logs()))',
+      output: '>>> Cleaned parallel logs in 4ms!\n[JIT: 2.3x speedup on loop evaluation]'
     },
     modal: {
       title: 'Python Automation Decoded',
@@ -1169,6 +1232,50 @@ window.openModuleModal = function(moduleId) {
   // Render Leverage Formula Box
   const leverageContainer = document.getElementById('modal-leverage');
   leverageContainer.innerHTML = module.leverage.replace(/\*\Gamma\*/g, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Render 2026 Modern Highlights & Interactive Sandbox if available
+  let versionBox = document.getElementById('modal-version-2026');
+  if (!versionBox) {
+    versionBox = document.createElement('div');
+    versionBox.id = 'modal-version-2026';
+    leverageContainer.parentNode.insertBefore(versionBox, leverageContainer.nextSibling);
+  }
+  
+  if (module.version2026) {
+    const v = module.version2026;
+    versionBox.innerHTML = `
+      <div style="margin: 12px 0; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 11px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 4px;">
+            <i class="ti ti-sparkles"></i> 2026 Modern Standard: ${v.version}
+          </span>
+          <span style="font-size: 9px; font-weight: 700; background: #10b981; color: #fff; padding: 2px 6px; border-radius: 10px;">${v.status.toUpperCase()}</span>
+        </div>
+        <div style="font-size: 10.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">${v.headline}</div>
+        <div class="version-diff-container">
+          <div class="diff-col-legacy">
+            <h4><i class="ti ti-history"></i> Legacy Way</h4>
+            <div style="color: var(--text-secondary); line-height: 1.35;">${v.legacy}</div>
+          </div>
+          <div class="diff-col-modern">
+            <h4><i class="ti ti-bolt"></i> 2026 Modern Way</h4>
+            <div style="color: var(--text-secondary); line-height: 1.35;">${v.modern}</div>
+          </div>
+        </div>
+        <div class="tutor-code-sandbox" style="margin-top: 8px;">
+          <div class="tutor-code-header">
+            <span>💻 2026 Live Sandbox</span>
+            <button class="tutor-run-btn" onclick="runTutorCode('modal-code-out')"><i class="ti ti-player-play"></i> Run Code</button>
+          </div>
+          <div class="tutor-code-body">${v.codeSnippet}</div>
+          <div class="tutor-code-output" id="modal-code-out" data-output="${v.output.replace(/"/g, '&quot;')}"></div>
+        </div>
+      </div>
+    `;
+    versionBox.style.display = 'block';
+  } else {
+    versionBox.style.display = 'none';
+  }
   
   // Unflip card reset
   const cardWrapper = document.getElementById('modal-flashcard');
@@ -2203,13 +2310,69 @@ function sendTutorMessage(text) {
     if (state.tutorMode === 'chat') {
       const selectedTopic = document.getElementById('tutor-topic-select').value;
       const persona = document.getElementById('tutor-persona-select').value;
+      const lower = text.toLowerCase();
       
       const dialogue = TUTOR_DIALOGUES[selectedTopic] || TUTOR_DIALOGUES['default'];
-      if (selectedTopic === 'default') {
-        const randIdx = Math.floor(Math.random() * dialogue.answers.length);
-        reply = dialogue.answers[randIdx];
+      
+      if (lower.includes('code') || lower.includes('example') || lower.includes('syntax')) {
+        // Find matching module to get modern 2026 code
+        const matchedMod = BITES.find(b => b.modal.title.toLowerCase().includes(selectedTopic.toLowerCase()) || b.title.toLowerCase().includes(selectedTopic.toLowerCase()) || b.tag.toLowerCase().includes(selectedTopic.toLowerCase()));
+        if (matchedMod && matchedMod.version2026) {
+          const v = matchedMod.version2026;
+          const sId = 'tutor-code-' + Date.now();
+          reply = `Here is the latest 2026 modern code implementation for <strong>${matchedMod.title}</strong>:<br><br>
+            <div class="tutor-code-sandbox">
+              <div class="tutor-code-header">
+                <span><span class="version-pill-2026">2026</span> ${v.version}</span>
+                <button class="tutor-run-btn" onclick="runTutorCode('${sId}')"><i class="ti ti-player-play"></i> Run Code</button>
+              </div>
+              <div class="tutor-code-body">${v.codeSnippet}</div>
+              <div class="tutor-code-output" id="${sId}" data-output="${v.output.replace(/"/g, '&quot;')}"></div>
+            </div>`;
+        } else {
+          const sId = 'tutor-code-' + Date.now();
+          reply = `Here is a modern 2026 Python automation script snippet:<br><br>
+            <div class="tutor-code-sandbox">
+              <div class="tutor-code-header">
+                <span><span class="version-pill-2026">2026</span> Python 3.14 JIT</span>
+                <button class="tutor-run-btn" onclick="runTutorCode('${sId}')"><i class="ti ti-player-play"></i> Run Code</button>
+              </div>
+              <div class="tutor-code-body"># Python 3.14 JIT Pipeline\nimport asyncio, pathlib\n\nasync def main():\n    print("Optimized loop execution active!")\n    return "✓ Success: 0.4ms"\n\nasyncio.run(main())</div>
+              <div class="tutor-code-output" id="${sId}" data-output=">>> Optimized loop execution active!\n>>> ✓ Success: 0.4ms [JIT compiled]"></div>
+            </div>`;
+        }
+      } else if (lower.includes('latest') || lower.includes('2026') || lower.includes('updates')) {
+        const matchedMod = BITES.find(b => b.modal.title.toLowerCase().includes(selectedTopic.toLowerCase()) || b.title.toLowerCase().includes(selectedTopic.toLowerCase()) || b.tag.toLowerCase().includes(selectedTopic.toLowerCase()));
+        if (matchedMod && matchedMod.version2026) {
+          const v = matchedMod.version2026;
+          reply = `🚀 <strong>2026 Latest Standard for ${matchedMod.tag}</strong>:<br><br>
+            <strong>Version:</strong> <span class="version-pill-2026">${v.version}</span> [${v.status}]<br>
+            <strong>Key Headline:</strong> ${v.headline}<br><br>
+            <strong>Modern Shift:</strong> ${v.modern}<br><br>
+            <em>Click "2026 Code Example" below to run the live sandbox!</em>`;
+        } else {
+          reply = `🚀 <strong>2026 Tech Stack Highlights</strong>:<br><br>
+            • <strong>Python 3.14:</strong> Native CPython JIT compiler & free-threaded GIL for true multicore loops.<br>
+            • <strong>React 19 & Next.js 16:</strong> Full Server Actions adoption & streaming React Server Components.<br>
+            • <strong>PostgreSQL 17:</strong> Native JSON_TABLE support and pgvector 0.8+ with halfvec.<br>
+            • <strong>WebAssembly 3.0:</strong> Native Garbage Collection & Component Model for polyglot web speed.`;
+        }
+      } else if (lower.includes('quiz') || lower.includes('challenge')) {
+        const matchedMod = BITES.find(b => b.modal.title.toLowerCase().includes(selectedTopic.toLowerCase()) || b.title.toLowerCase().includes(selectedTopic.toLowerCase()));
+        const ch = matchedMod ? matchedMod.challenge : {
+          q: "What is the primary speed benefit of the Python 3.14 JIT compiler?",
+          opts: ["Freezes bytecode in RAM", "Translates hot loop bytecode to native machine instructions", "Removes variables from memory", "Deletes redundant functions"],
+          answer: 1
+        };
+        reply = `🧠 <strong>Rapid Concept Quiz</strong>:<br><br>${ch.q}<br><br>` +
+          ch.opts.map((opt, i) => `<button class="quick-chip" style="margin: 3px 0; width: 100%; text-align: left; padding: 6px 10px;" onclick="checkTutorQuiz(this, ${i === ch.answer})"><strong>${String.fromCharCode(65+i)}.</strong> ${opt}</button>`).join('');
       } else {
-        reply = dialogue[persona] || dialogue['analogy'];
+        if (selectedTopic === 'default') {
+          const randIdx = Math.floor(Math.random() * dialogue.answers.length);
+          reply = dialogue.answers[randIdx];
+        } else {
+          reply = dialogue[persona] || dialogue['analogy'];
+        }
       }
     } else {
       // Roleplay mode evaluation
@@ -2266,40 +2429,167 @@ function sendTutorMessage(text) {
     tutorMsg.className = 'chat-msg tutor';
     chatArea.appendChild(tutorMsg);
     
-    let charIdx = 0;
-    synth.playTone(600, 'sine', 0.05);
-    
-    function typeChar() {
-      if (charIdx < reply.length) {
-        tutorMsg.innerHTML += reply.charAt(charIdx);
-        charIdx++;
-        chatArea.scrollTop = chatArea.scrollHeight;
-        
-        if (charIdx % 4 === 0) {
-          synth.playTone(800 + Math.random() * 200, 'sine', 0.02);
-        }
-        setTimeout(typeChar, 10 + Math.random() * 12);
-      } else {
-        // Trigger rewards on roleplay success
-        if (state.tutorMode === 'roleplay' && isRoleplaySuccess) {
-          setTimeout(() => {
-            synth.playSuccess();
-            // Confetti inside AI tutor chat panel
-            const panelRect = document.getElementById('ai-tutor-panel').getBoundingClientRect();
-            const parentRect = document.getElementById('particle-canvas').parentElement.getBoundingClientRect();
-            const x = panelRect.left + panelRect.width / 2 - parentRect.left;
-            const y = panelRect.top + panelRect.height * 0.4 - parentRect.top;
-            particles.spawnExplosion(x, y, 20);
-            
-            addXP(40); // 40 XP reward!
-          }, 400);
+    const hasHTML = reply.includes('<');
+    if (hasHTML) {
+      tutorMsg.innerHTML = reply;
+      chatArea.scrollTop = chatArea.scrollHeight;
+      synth.playTone(600, 'sine', 0.05);
+    } else {
+      let charIdx = 0;
+      synth.playTone(600, 'sine', 0.05);
+      
+      function typeChar() {
+        if (charIdx < reply.length) {
+          tutorMsg.innerHTML += reply.charAt(charIdx);
+          charIdx++;
+          chatArea.scrollTop = chatArea.scrollHeight;
+          
+          if (charIdx % 4 === 0) {
+            synth.playTone(800 + Math.random() * 200, 'sine', 0.02);
+          }
+          setTimeout(typeChar, 10 + Math.random() * 12);
+        } else {
+          // Trigger rewards on roleplay success
+          if (state.tutorMode === 'roleplay' && isRoleplaySuccess) {
+            setTimeout(() => {
+              synth.playSuccess();
+              const panelRect = document.getElementById('ai-tutor-panel').getBoundingClientRect();
+              const parentRect = document.getElementById('particle-canvas').parentElement.getBoundingClientRect();
+              const x = panelRect.left + panelRect.width / 2 - parentRect.left;
+              const y = panelRect.top + panelRect.height * 0.4 - parentRect.top;
+              particles.spawnExplosion(x, y, 20);
+              addXP(40);
+            }, 400);
+          }
         }
       }
+      typeChar();
     }
-    typeChar();
     
-  }, 800 + Math.random() * 600);
+  }, 700);
 }
+
+// Quick Prompt & Code Sandbox Handlers
+window.sendQuickPrompt = function(type) {
+  const selectedTopic = document.getElementById('tutor-topic-select').value;
+  let query = "";
+  if (type === 'analogy') {
+    query = `Explain ${selectedTopic === 'default' ? 'this technology' : selectedTopic} with an ELI5 analogy.`;
+  } else if (type === 'code') {
+    query = `Show me a modern 2026 code example for ${selectedTopic === 'default' ? 'Python automation' : selectedTopic}.`;
+  } else if (type === 'quiz') {
+    query = `Give me a quick 1-question practice quiz on ${selectedTopic === 'default' ? 'modern tech concepts' : selectedTopic}.`;
+  } else if (type === 'latest') {
+    query = `What are the latest 2026 version updates for ${selectedTopic === 'default' ? 'the tech stack' : selectedTopic}?`;
+  }
+  sendTutorMessage(query);
+};
+
+window.runTutorCode = function(sandboxId) {
+  synth.playTone(550, 'triangle', 0.06);
+  const out = document.getElementById(sandboxId);
+  if (!out) return;
+  out.style.display = 'block';
+  out.innerHTML = `<span style="color:#f59e0b;"><i class="ti ti-loader" style="animation:spin 1s linear infinite; display:inline-block;"></i> Compiling and running modern 2026 runtime...</span>`;
+  
+  setTimeout(() => {
+    synth.playSuccess();
+    const result = out.getAttribute('data-output') || '>>> Execution completed in 1.4ms (0 errors)';
+    out.innerHTML = `<strong>Console Output:</strong>\n${result}`;
+  }, 450);
+};
+
+window.checkTutorQuiz = function(btn, isCorrect) {
+  if (isCorrect) {
+    synth.playSuccess();
+    btn.style.background = '#10b981';
+    btn.style.color = 'white';
+    btn.innerHTML += ' ✓ Correct! +15 XP';
+    addXP(15);
+  } else {
+    synth.playError();
+    btn.style.background = '#ef4444';
+    btn.style.color = 'white';
+    btn.innerHTML += ' ✗ Try again!';
+  }
+};
+
+// Tech Radar 2026 Data & Controller
+const TECH_RADAR_DATA = {
+  adopt: [
+    { name: "Python 3.14", version: "v3.14.0", desc: "CPython JIT compiler tier & free-threaded multi-core execution without GIL." },
+    { name: "React 19 & Next.js 16", version: "v19.1.0", desc: "Server Actions, streaming Server Components & Turbopack default bundling." },
+    { name: "PostgreSQL 17", version: "v17.2", desc: "Native SQL:2023 JSON_TABLE, memory-optimized vacuuming, pgvector 0.8+." },
+    { name: "Tailwind CSS v4", version: "v4.0.0", desc: "CSS-first engine powered by Lightning CSS; zero-config build pipeline." },
+    { name: "Zero-Trust Passkeys", version: "WebAuthn L3", desc: "Hardware-backed biometrics replacing static passwords & SMS 2FA globally." }
+  ],
+  trial: [
+    { name: "WebAssembly 3.0", version: "Wasm GC / Component", desc: "Garbage Collection & Component Model for polyglot near-native browser modules." },
+    { name: "LangGraph Multi-Agent Swarms", version: "v0.3", desc: "Stateful multi-agent orchestration for end-to-end automated software delivery." },
+    { name: "Vector DBs with HNSW", version: "Pinecone / pgvector", desc: "Sub-millisecond approximate nearest-neighbor search for high-dimensional embeddings." }
+  ],
+  assess: [
+    { name: "Quantum Cloud APIs", version: "Qiskit 1.3+", desc: "Cloud-hosted quantum hardware for combinatorial optimization & logistics routing." },
+    { name: "AlphaFold 3 Biotech", version: "API 2026", desc: "High-accuracy biomolecular interaction modeling for drug discovery pipelines." }
+  ],
+  hold: [
+    { name: "REST Polling for Real-Time", version: "Legacy", desc: "High server load & latency. Migrate to Server-Sent Events (SSE) or WebSockets." },
+    { name: "Unstructured Raw Prompts", version: "Legacy", desc: "Non-deterministic outputs. Migrate to JSON schemas & function calling." }
+  ]
+};
+
+window.openTechRadar = function() {
+  synth.playFlip();
+  const modal = document.getElementById('tech-radar-modal');
+  if (!modal) return;
+  renderTechRadar();
+  modal.classList.add('show');
+};
+
+window.closeTechRadar = function() {
+  synth.playFlip();
+  const modal = document.getElementById('tech-radar-modal');
+  if (modal) modal.classList.remove('show');
+};
+
+function renderTechRadar() {
+  const container = document.getElementById('tech-radar-content');
+  if (!container) return;
+  
+  const quadrants = [
+    { key: 'adopt', title: 'Adopt (Essential 2026 Standards)', icon: '🟢', color: '#10b981' },
+    { key: 'trial', title: 'Trial (High-Growth Production)', icon: '🔵', color: '#38bdf8' },
+    { key: 'assess', title: 'Assess (Promising Frontier Tech)', icon: '🟣', color: '#a855f7' },
+    { key: 'hold', title: 'Hold (Legacy Patterns to Retire)', icon: '🔴', color: '#ef4444' }
+  ];
+  
+  container.innerHTML = `
+    <div class="radar-grid">
+      ${quadrants.map(q => `
+        <div class="radar-quadrant">
+          <div class="radar-quadrant-title" style="color:${q.color};">
+            <span>${q.icon}</span> ${q.title}
+          </div>
+          ${TECH_RADAR_DATA[q.key].map(item => `
+            <div class="radar-item-card" onclick="openRadarItem('${item.name}')">
+              <div class="radar-item-header">
+                <span class="radar-item-title">${item.name}</span>
+                <span class="radar-item-version">${item.version}</span>
+              </div>
+              <div class="radar-item-desc">${item.desc}</div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+window.openRadarItem = function(techName) {
+  closeTechRadar();
+  openAITutor('default');
+  sendTutorMessage(`Explain why ${techName} is in the 2026 Tech Radar and show a quick code example.`);
+};
 
 // 3D Card Tilt Mouse Move Effect
 function initTiltEffect() {
