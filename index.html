@@ -68,6 +68,9 @@
           <a href="#" id="sidebar-nav-analytics" class="sidebar-nav-item" onclick="switchView('analytics')">
             <i class="ti ti-activity" aria-hidden="true"></i> Analytics
           </a>
+          <a href="#" id="sidebar-nav-radar" class="sidebar-nav-item" onclick="openTechRadar(); return false;">
+            <i class="ti ti-radar" aria-hidden="true"></i> Tech Radar 2026
+          </a>
           <a href="./AI Digital Executor/dist/index.html" class="sidebar-nav-item" target="_blank">
             <i class="ti ti-terminal" aria-hidden="true"></i> Digital Executor
           </a>
@@ -660,6 +663,14 @@
         <!-- Rendered dynamically -->
       </div>
 
+      <!-- Quick action chips -->
+      <div class="tutor-quick-chips">
+        <button class="quick-chip" onclick="sendQuickPrompt('analogy')"><i class="ti ti-bulb"></i> ELI5 Analogy</button>
+        <button class="quick-chip" onclick="sendQuickPrompt('code')"><i class="ti ti-code"></i> 2026 Code Example</button>
+        <button class="quick-chip" onclick="sendQuickPrompt('quiz')"><i class="ti ti-help"></i> Practice Quiz</button>
+        <button class="quick-chip" onclick="sendQuickPrompt('latest')"><i class="ti ti-sparkles"></i> 2026 Latest Updates</button>
+      </div>
+
       <!-- Chat input -->
       <div class="ai-tutor-input-area">
         <input type="text" class="ai-tutor-input" id="ai-tutor-chat-input" placeholder="Type here..." onkeydown="if(event.key === 'Enter') handleTutorInput()">
@@ -771,6 +782,25 @@
         <button class="level-up-btn" onclick="closeLevelUpCelebration()">
           <i class="ti ti-bolt" aria-hidden="true"></i> Claim Rewards &amp; Continue
         </button>
+      </div>
+    <!-- Tech Radar 2026 Modal -->
+    <div id="tech-radar-modal" class="tech-radar-overlay" role="dialog" aria-modal="true" aria-labelledby="radar-m-title">
+      <div class="tech-radar-modal">
+        <header class="tech-radar-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:22px;">📡</span>
+            <div>
+              <h2 id="radar-m-title" style="font-size:15px; font-weight:700; color:var(--text-primary); margin:0;">2026 Industry Tech Radar</h2>
+              <div style="font-size:11px; color:var(--text-muted);">Real-time adoption status, latest versions &amp; release standards</div>
+            </div>
+          </div>
+          <button class="modal-close" onclick="closeTechRadar()" aria-label="Close Tech Radar">
+            <i class="ti ti-x" aria-hidden="true"></i>
+          </button>
+        </header>
+        <div class="tech-radar-body" id="tech-radar-content">
+          <!-- Rendered dynamically by app.js -->
+        </div>
       </div>
     </div>
 
