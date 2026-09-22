@@ -1064,45 +1064,57 @@ body {
 }
 
 /* Interactive Modal & Flashcards */
+body.modal-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(3, 7, 18, 0.75);
-  backdrop-filter: blur(8px);
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(3, 7, 18, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 200;
+  z-index: 9999;
   padding: 16px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 .modal-overlay.show {
   display: flex;
 }
 .modal-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 680px;
+  max-height: calc(100dvh - 32px);
+  max-height: calc(100vh - 32px);
+  margin: auto;
   background: var(--bg-app);
   border: 1px solid var(--border-card);
   border-radius: var(--border-radius-lg);
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.7);
   animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   display: flex;
   flex-direction: column;
-  max-height: 85vh;
 }
 .modal-header {
-  padding: 16px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--border-card);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
+  background: var(--bg-card);
 }
 .modal-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -1115,14 +1127,53 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+  padding: 4px;
+  border-radius: 6px;
 }
 .modal-close:hover {
   color: var(--text-primary);
+  transform: scale(1.1);
 }
 .modal-body {
-  padding: 16px;
+  padding: 20px;
   overflow-y: auto;
-  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto;
+}
+
+/* Modal Responsive Adaptations: Mobile, Tablet, Desktop */
+@media (max-width: 639px) {
+  .modal-overlay {
+    padding: 10px;
+    align-items: center;
+  }
+  .modal-container {
+    max-width: 100%;
+    max-height: calc(100dvh - 20px);
+    max-height: calc(100vh - 20px);
+    border-radius: 16px;
+  }
+  .modal-header {
+    padding: 12px 16px;
+  }
+  .modal-body {
+    padding: 14px 16px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .modal-container {
+    max-width: 600px;
+    max-height: 86vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-container {
+    max-width: 700px;
+    max-height: 86vh;
+  }
 }
 
 /* 3D Flashcard flip */
@@ -1705,14 +1756,19 @@ body {
 .level-up-overlay {
   position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   background: rgba(3, 7, 18, 0.88);
   backdrop-filter: blur(12px);
-  z-index: 300;
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   animation: fadeIn 0.4s ease;
+  box-sizing: border-box;
 }
 .level-up-card {
   width: 100%;
@@ -2031,18 +2087,36 @@ body {
   line-height: 1.35;
 }
 
+@media (max-width: 480px) {
+  .version-diff-container {
+    grid-template-columns: 1fr;
+  }
+  .diff-col-legacy {
+    border-right: none;
+    border-bottom: 1px solid var(--border-card);
+    padding-right: 0;
+    padding-bottom: 10px;
+  }
+}
+
 /* Tech Radar 2026 Modal */
 .tech-radar-overlay {
   position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   background: rgba(3, 7, 18, 0.85);
   backdrop-filter: blur(10px);
-  z-index: 250;
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 9999;
   display: none;
   align-items: center;
   justify-content: center;
   padding: 16px;
   animation: fadeIn 0.25s ease;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 .tech-radar-overlay.show {
   display: flex;
@@ -2050,7 +2124,9 @@ body {
 .tech-radar-modal {
   width: 100%;
   max-width: 860px;
-  max-height: 90vh;
+  max-height: calc(100dvh - 32px);
+  max-height: calc(100vh - 32px);
+  margin: auto;
   background: var(--bg-app);
   border: 1px solid var(--border-card);
   border-radius: var(--border-radius-lg);
@@ -2058,6 +2134,17 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+@media (max-width: 639px) {
+  .tech-radar-overlay {
+    padding: 10px;
+  }
+  .tech-radar-modal {
+    max-width: 100%;
+    max-height: calc(100dvh - 20px);
+    max-height: calc(100vh - 20px);
+    border-radius: 16px;
+  }
 }
 .tech-radar-header {
   padding: 16px 20px;
