@@ -1332,6 +1332,7 @@ window.openModuleModal = function(moduleId) {
   
   renderCheckpointDetails();
   document.getElementById('module-modal').classList.add('show');
+  document.body.classList.add('modal-open');
 };
 
 // Checkpoints Journey Handlers
@@ -1795,6 +1796,7 @@ window.submitModalChallengeAnswer = function(optEl, isCorrect) {
 window.closeModuleModal = function() {
   synth.playFlip();
   document.getElementById('module-modal').classList.remove('show');
+  document.body.classList.remove('modal-open');
   activeModalModuleId = null;
 };
 
@@ -1880,6 +1882,7 @@ function triggerLevelUpCelebration() {
   badgeName.textContent = badgeInfo.name;
   
   overlay.style.display = 'flex';
+  document.body.classList.add('modal-open');
   
   // Spawn constant particles
   const parent = overlay.getBoundingClientRect();
@@ -1900,6 +1903,7 @@ function triggerLevelUpCelebration() {
 window.closeLevelUpCelebration = function() {
   synth.playFlip();
   document.getElementById('level-up-overlay').style.display = 'none';
+  document.body.classList.remove('modal-open');
 };
 
 // Daily Briefing Scan Effect
@@ -2544,12 +2548,14 @@ window.openTechRadar = function() {
   if (!modal) return;
   renderTechRadar();
   modal.classList.add('show');
+  document.body.classList.add('modal-open');
 };
 
 window.closeTechRadar = function() {
   synth.playFlip();
   const modal = document.getElementById('tech-radar-modal');
   if (modal) modal.classList.remove('show');
+  document.body.classList.remove('modal-open');
 };
 
 function renderTechRadar() {
@@ -3100,6 +3106,27 @@ window.addEventListener('DOMContentLoaded', () => {
   renderConversation();
   
   document.body.removeAttribute('data-theme');
+  
+  // Backdrop click closing for modals
+  document.getElementById('module-modal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'module-modal') closeModuleModal();
+  });
+  document.getElementById('tech-radar-modal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'tech-radar-modal') closeTechRadar();
+  });
+  document.getElementById('level-up-overlay')?.addEventListener('click', (e) => {
+    if (e.target.id === 'level-up-overlay') closeLevelUpCelebration();
+  });
+
+  // Escape key to close modals
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModuleModal();
+      closeTechRadar();
+      closeLevelUpCelebration();
+      closeAITutor();
+    }
+  });
   
   document.body.addEventListener('click', () => {
     synth.init();

@@ -11,10 +11,8 @@ lerna-debug.log*
 node_modules/
 **/node_modules/
 
-# Production build outputs
-dist/
+# Production build outputs (tracked for GitHub Pages deployment)
 dist-ssr/
-**/dist/
 **/dist-ssr/
 
 # Editor directories and files
