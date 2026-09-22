@@ -7,8 +7,8 @@ let state = {
   completedModules: new Set(),
   currentTrack: 'all',
   activeCareer: null,
-  theme: 'dark',
-  soundEnabled: true,
+  theme: 'light',
+  soundEnabled: false,
   tutorMode: 'chat',
   activeRoleplayScenario: 'pitch',
   activeView: 'home',
@@ -1131,10 +1131,12 @@ window.toggleSound = function() {
   
   if (state.soundEnabled) {
     btn.innerHTML = '<i class="ti ti-volume" aria-hidden="true"></i>';
+    btn.title = 'Sound FX Enabled (Click to Mute)';
     synth.playTone(880, 'sine', 0.1);
     showNotification('🔊 Sound FX enabled.');
   } else {
-    btn.innerHTML = '<i class="ti ti-volume-3" aria-hidden="true"></i>'; // Mute icon
+    btn.innerHTML = '<i class="ti ti-volume-off" aria-hidden="true"></i>';
+    btn.title = 'Sound FX Muted (Click to Unmute)';
     showNotification('🔇 Sound FX muted.');
   }
 };
@@ -2625,19 +2627,24 @@ function initTiltEffect() {
 
 // Light / Dark Theme toggle
 window.toggleTheme = function() {
-  synth.playTone(880, 'sine', 0.1);
+  if (state.soundEnabled) synth.playTone(880, 'sine', 0.1);
   const body = document.body;
+  const themeBtns = document.querySelectorAll('.theme-btn');
+  let themeIcon = null;
+  themeBtns.forEach(b => {
+    if (b.id !== 'sound-btn') themeIcon = b.querySelector('i');
+  });
   
-  if (state.theme === 'dark') {
-    state.theme = 'light';
-    body.setAttribute('data-theme', 'light');
-    document.querySelector('.theme-btn i').className = 'ti ti-moon';
-    showNotification('☀️ Switched to Light Theme.');
-  } else {
+  if (state.theme === 'light') {
     state.theme = 'dark';
     body.removeAttribute('data-theme');
-    document.querySelector('.theme-btn i').className = 'ti ti-sun';
+    if (themeIcon) themeIcon.className = 'ti ti-sun';
     showNotification('🌙 Switched to Dark Theme.');
+  } else {
+    state.theme = 'light';
+    body.setAttribute('data-theme', 'light');
+    if (themeIcon) themeIcon.className = 'ti ti-moon';
+    showNotification('☀️ Switched to Light Theme.');
   }
 };
 
@@ -3105,7 +3112,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initTiltEffect();
   renderConversation();
   
-  document.body.removeAttribute('data-theme');
+  document.body.setAttribute('data-theme', 'light');
   
   // Backdrop click closing for modals
   document.getElementById('module-modal')?.addEventListener('click', (e) => {

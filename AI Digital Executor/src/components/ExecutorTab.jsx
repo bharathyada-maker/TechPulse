@@ -252,7 +252,7 @@ export default function ExecutorTab({ onRefreshFileSystem }) {
       </div>
 
       {/* input bar */}
-      <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '10px' }}>
+      <form onSubmit={handleSubmit} className="executor-input-form" style={{ display: 'flex', gap: '10px' }}>
         <input 
           type="text" 
           value={command}

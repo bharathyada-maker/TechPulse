@@ -7,7 +7,11 @@ import {
   FileCheck2, 
   Activity, 
   Cpu, 
-  Globe 
+  Globe,
+  Menu,
+  X,
+  Sun,
+  Moon
 } from 'lucide-react';
 import SandboxViewer from './components/SandboxViewer';
 import ExecutorTab from './components/ExecutorTab';
@@ -20,11 +24,17 @@ import { sendRequest } from './api';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('executor');
+  const [theme, setTheme] = useState('light');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [files, setFiles] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const fetchFilesystemStatus = async (showRefresher = false) => {
     if (showRefresher) setRefreshing(true);
@@ -89,28 +99,72 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {/* Mobile Top Navigation Bar */}
+      <header className="mobile-topbar">
+        <button 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '6px' }}
+          aria-label="Toggle Menu"
+        >
+          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Cpu size={20} style={{ color: 'var(--accent-cyan)' }} />
+          <span style={{ fontWeight: '700', fontSize: '15px', color: 'var(--text-primary)' }}>Antigravity OS</span>
+        </div>
+
+        <button 
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          style={{ background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '6px' }}
+          aria-label="Toggle Theme"
+          title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+        >
+          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
+      </header>
+
+      {/* Backdrop for mobile drawer */}
+      {mobileMenuOpen && (
+        <div className="sidebar-backdrop" onClick={() => setMobileMenuOpen(false)} />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${mobileMenuOpen ? 'open' : ''}`}>
         {/* Title / Logo */}
-        <div style={{ padding: '24px', borderBottom: '1px solid var(--border-dim)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Cpu size={24} style={{ color: '#00f0ff' }} className="pulse-glow" />
-            <h1 className="text-glow-cyan" style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.03em', background: 'linear-gradient(135deg, #00f0ff, #3b82f6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Antigravity OS
-            </h1>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-dim)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Cpu size={22} style={{ color: 'var(--accent-cyan)' }} className="pulse-glow" />
+              <h1 className="text-glow-cyan" style={{ fontSize: '18px', fontWeight: '800', letterSpacing: '-0.03em', background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-blue))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                Antigravity OS
+              </h1>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--text-muted)' }}>
+              <span className="status-dot success active"></span>
+              <span>Local AI Layer Online</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#64748b' }}>
-            <span className="status-dot success active"></span>
-            <span>Local AI Layer Online</span>
-          </div>
+
+          <button 
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+            style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '6px', borderRadius: '6px' }}
+            aria-label="Toggle Theme"
+            title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+          >
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
         </div>
 
         {/* Links */}
-        <nav style={{ padding: '20px 12px', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <nav style={{ padding: '16px 12px', flexGrow: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {navItems.map(item => (
             <div
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                setActiveTab(item.id);
+                setMobileMenuOpen(false);
+              }}
               className={`nav-link ${activeTab === item.id ? 'active' : ''}`}
             >
               {item.icon}
@@ -120,14 +174,14 @@ export default function App() {
         </nav>
 
         {/* Footer / Info */}
-        <div style={{ padding: '20px', borderTop: '1px solid var(--border-dim)', background: 'rgba(0, 0, 0, 0.15)', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px', color: '#64748b' }}>
+        <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border-dim)', background: 'rgba(0, 0, 0, 0.05)', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11.5px', color: 'var(--text-muted)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Network Host:</span>
-            <span style={{ color: '#94a3b8', fontFamily: 'monospace' }}>localhost:3001</span>
+            <span style={{ color: 'var(--text-secondary)', fontFamily: 'monospace' }}>localhost:3001</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>Sandboxed Mode:</span>
-            <span style={{ color: '#10b981', fontWeight: '600' }}>Enabled</span>
+            <span style={{ color: 'var(--accent-emerald)', fontWeight: '600' }}>Enabled</span>
           </div>
         </div>
       </aside>
@@ -136,7 +190,7 @@ export default function App() {
       <main className="main-content">
         <div className="dashboard-grid">
           {/* Active Tab View */}
-          <div className="glass-panel" style={{ padding: '24px', minHeight: '520px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className="glass-panel" style={{ padding: '20px', minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             {renderActiveTab()}
           </div>
 

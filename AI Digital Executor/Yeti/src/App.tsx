@@ -21,8 +21,8 @@ import type { IncomeSources, ClaimedDeductions, CalculationResult } from './util
 import { calculateTax } from './utils/taxCalculator';
 
 export default function App() {
-  // Theme state
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  // Theme state (default Light mode)
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   
   // Navigation & Persona states
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -147,6 +147,11 @@ export default function App() {
   return (
     <div className="app-container">
       
+      {/* Mobile Drawer Backdrop */}
+      {mobileSidebarOpen && (
+        <div className="sidebar-backdrop" onClick={() => setMobileSidebarOpen(false)} />
+      )}
+
       {/* SIDEBAR NAVIGATION Panel */}
       <aside className={`sidebar ${mobileSidebarOpen ? 'open' : ''}`}>
         
@@ -164,9 +169,9 @@ export default function App() {
           </div>
           {/* Close drawer for mobile view */}
           <button 
-            style={{ display: 'none', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }} 
-            className="mobile-close-btn"
             onClick={() => setMobileSidebarOpen(false)}
+            style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'none' }}
+            className="mobile-close-btn"
           >
             <X size={20} />
           </button>
@@ -223,35 +228,116 @@ export default function App() {
         {/* TOP HEADER */}
         <header className="main-header">
           
-          {/* Hamburger (Mobile) */}
-          <button 
-            style={{ display: 'none', background: 'none', border: 'none', color: 'var(--text-primary)', cursor: 'pointer' }}
-            className="mobile-menu-btn"
-            onClick={() => setMobileSidebarOpen(true)}
-          >
-            <Menu size={24} />
-          </button>
+          <div className="header-primary-bar">
+            {/* Hamburger (Mobile) */}
+            <button 
+              className="mobile-menu-btn"
+              onClick={() => setMobileSidebarOpen(prev => !prev)}
+              aria-label="Toggle Navigation Menu"
+            >
+              <Menu size={22} />
+            </button>
 
-          {/* Page Title Context */}
-          <div style={{ marginRight: 'auto' }} className="header-title-section">
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>
-              {visibleMenuItems.find(m => m.id === activeTab)?.label || 'Overview'}
-            </h2>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-              Compliance Portal • Tax rules configured for Assessment Year <strong>{assessmentYear}</strong>
+            {/* Page Title Context */}
+            <div className="header-title-section">
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 600 }}>
+                {visibleMenuItems.find(m => m.id === activeTab)?.label || 'Overview'}
+              </h2>
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }} className="header-subtitle">
+                Compliance Portal • AY <strong>{assessmentYear}</strong>
+              </div>
+            </div>
+
+            {/* Quick Actions: Notifications & Theme Toggle */}
+            <div className="header-quick-actions">
+              {/* Notifications Alert Bell */}
+              <div style={{ position: 'relative' }}>
+                <button 
+                  onClick={() => setShowNotifications(prev => !prev)}
+                  style={{
+                    background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)',
+                    borderRadius: '8px', padding: '8px', cursor: 'pointer', color: 'var(--text-primary)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}
+                  aria-label="Notifications"
+                >
+                  <Bell size={16} />
+                  {unreadNotifications > 0 && (
+                    <span style={{
+                      position: 'absolute', top: '-4px', right: '-4px',
+                      backgroundColor: 'var(--accent-danger)', color: '#ffffff',
+                      fontSize: '0.65rem', fontWeight: 'bold', width: '16px', height: '16px',
+                      borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }}>
+                      {unreadNotifications}
+                    </span>
+                  )}
+                </button>
+
+                {/* Notification Dropdown Drawer */}
+                {showNotifications && (
+                  <div style={{
+                    position: 'absolute', top: '44px', right: 0,
+                    width: '300px', maxWidth: 'calc(100vw - 32px)', backgroundColor: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-color)', borderRadius: '12px',
+                    boxShadow: '0 8px 30px rgba(0,0,0,0.5)', zIndex: 500,
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Compliance Alerts</span>
+                      <button style={{ fontSize: '0.75rem', background: 'none', border: 'none', color: 'var(--accent-primary)', cursor: 'pointer' }} onClick={markAllNotificationsRead}>
+                        Mark all read
+                      </button>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '250px', overflowY: 'auto' }}>
+                      {notificationsList.map(item => (
+                        <div 
+                          key={item.id} 
+                          onClick={() => handleNotificationRead(item.id)}
+                          style={{
+                            padding: '12px 16px', borderBottom: '1px solid var(--border-color)',
+                            backgroundColor: item.read ? 'transparent' : 'rgba(99, 102, 241, 0.04)',
+                            cursor: 'pointer', display: 'flex', gap: '10px'
+                          }}
+                        >
+                          <Calendar size={14} style={{ color: item.read ? 'var(--text-muted)' : 'var(--accent-primary)', marginTop: '2px', flexShrink: 0 }} />
+                          <div>
+                            <div style={{ fontSize: '0.8rem', fontWeight: item.read ? 400 : 600, color: 'var(--text-primary)' }}>{item.title}</div>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '2px' }}>{item.desc}</div>
+                            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '4px' }}>{item.time}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Light/Dark Toggle */}
+              <button 
+                onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+                style={{
+                  background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)',
+                  borderRadius: '8px', padding: '8px', cursor: 'pointer', color: 'var(--text-primary)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}
+                aria-label="Toggle Theme"
+                title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              >
+                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
             </div>
           </div>
 
-          {/* Configuration controls & Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }} className="header-controls-section">
-            
+          {/* Configuration controls: Filing AY & Role */}
+          <div className="header-controls-section">
             {/* Assessment Year Select */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Filing AY:</span>
+            <div className="header-select-group">
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>Filing AY:</span>
               <select 
                 value={assessmentYear} 
                 onChange={(e: any) => setAssessmentYear(e.target.value)}
-                style={{ width: '130px', padding: '6px 10px', fontSize: '0.8rem' }}
+                style={{ padding: '6px 10px', fontSize: '0.8rem' }}
               >
                 <option value="AY-2025-26">AY 2025-26</option>
                 <option value="AY-2024-25">AY 2024-25</option>
@@ -259,12 +345,12 @@ export default function App() {
             </div>
 
             {/* Persona / Role Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Role:</span>
+            <div className="header-select-group" style={{ flexGrow: 1 }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>Role:</span>
               <select 
                 value={activeRole} 
                 onChange={(e: any) => setActiveRole(e.target.value)}
-                style={{ width: '170px', padding: '6px 10px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--accent-primary)' }}
+                style={{ padding: '6px 10px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--accent-primary)' }}
               >
                 <option value="taxpayer">Individual (Salaried)</option>
                 <option value="business">Freelancer / Business</option>
@@ -272,81 +358,6 @@ export default function App() {
                 <option value="admin">Platform Admin</option>
               </select>
             </div>
-
-            {/* Notifications Alert Bell */}
-            <div style={{ position: 'relative' }}>
-              <button 
-                onClick={() => setShowNotifications(prev => !prev)}
-                style={{
-                  background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)',
-                  borderRadius: '8px', padding: '8px', cursor: 'pointer', color: 'var(--text-primary)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}
-              >
-                <Bell size={16} />
-                {unreadNotifications > 0 && (
-                  <span style={{
-                    position: 'absolute', top: '-4px', right: '-4px',
-                    backgroundColor: 'var(--accent-danger)', color: '#ffffff',
-                    fontSize: '0.65rem', fontWeight: 'bold', width: '16px', height: '16px',
-                    borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                  }}>
-                    {unreadNotifications}
-                  </span>
-                )}
-              </button>
-
-              {/* Notification Dropdown Drawer */}
-              {showNotifications && (
-                <div style={{
-                  position: 'absolute', top: '44px', right: 0,
-                  width: '320px', backgroundColor: 'var(--bg-secondary)',
-                  border: '1px solid var(--border-color)', borderRadius: '12px',
-                  boxShadow: '0 8px 30px rgba(0,0,0,0.5)', zIndex: 500,
-                  overflow: 'hidden'
-                }}>
-                  <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Compliance Alerts</span>
-                    <button style={{ fontSize: '0.75rem', background: 'none', border: 'none', color: 'var(--accent-primary)', cursor: 'pointer' }} onClick={markAllNotificationsRead}>
-                      Mark all read
-                    </button>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '250px', overflowY: 'auto' }}>
-                    {notificationsList.map(item => (
-                      <div 
-                        key={item.id} 
-                        onClick={() => handleNotificationRead(item.id)}
-                        style={{
-                          padding: '12px 16px', borderBottom: '1px solid var(--border-color)',
-                          backgroundColor: item.read ? 'transparent' : 'rgba(99, 102, 241, 0.04)',
-                          cursor: 'pointer', display: 'flex', gap: '10px'
-                        }}
-                      >
-                        <Calendar size={14} style={{ color: item.read ? 'var(--text-muted)' : 'var(--accent-primary)', marginTop: '2px', flexShrink: 0 }} />
-                        <div>
-                          <div style={{ fontSize: '0.8rem', fontWeight: item.read ? 400 : 600, color: 'var(--text-primary)' }}>{item.title}</div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '2px' }}>{item.desc}</div>
-                          <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '4px' }}>{item.time}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Light/Dark Toggle */}
-            <button 
-              onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-              style={{
-                background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)',
-                borderRadius: '8px', padding: '8px', cursor: 'pointer', color: 'var(--text-primary)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}
-            >
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
-
           </div>
         </header>
 
