@@ -1058,7 +1058,7 @@ function renderModulesGrid() {
       <div class="module-card ${isRec ? 'recommended-outline' : ''} ${activeTrend ? 'trend-glow-outline' : ''}" onclick="openModuleModal('${b.id}')">
         <div class="module-icon-row">
           <span class="module-icon">${b.icon}</span>
-          <div style="display: flex; gap: 4px; align-items: center;">
+          <div class="module-badges-wrap">
             ${trendBadge}
             ${recBadge}
           </div>
