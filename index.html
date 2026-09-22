@@ -11,7 +11,7 @@
   <!-- Core Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-theme="light">
 
   <!-- Floating background glow blobs -->
   <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
@@ -39,13 +39,13 @@
     <header class="nav-header">
       <h1 class="nav-brand"><span>Tech</span>Pulse</h1>
       <div class="nav-actions">
-        <!-- Sound Effect Toggle -->
-        <button class="theme-btn" id="sound-btn" onclick="toggleSound()" aria-label="Mute/Unmute Sound FX" title="Toggle Sound FX">
-          <i class="ti ti-volume" aria-hidden="true"></i>
+        <!-- Sound Effect Toggle (Default Muted to avoid click sounds) -->
+        <button class="theme-btn" id="sound-btn" onclick="toggleSound()" aria-label="Mute/Unmute Sound FX" title="Sound FX Muted (Click to Unmute)">
+          <i class="ti ti-volume-off" aria-hidden="true"></i>
         </button>
-        <!-- Dark/Light Theme Toggle -->
-        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle Light/Dark Theme">
-          <i class="ti ti-sun" aria-hidden="true"></i>
+        <!-- Dark/Light Theme Toggle (Default Light) -->
+        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle Light/Dark Theme" title="Toggle Light/Dark Theme">
+          <i class="ti ti-moon" aria-hidden="true"></i>
         </button>
       </div>
     </header>
